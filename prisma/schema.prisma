@@ -15,6 +15,7 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
+  calendarToken String?   @unique
   accounts      Account[]
   sessions      Session[]
 
@@ -85,13 +86,18 @@ model Semester {
 
 // ==================== COURSE ====================
 model Course {
-  id           String  @id @default(cuid())
-  name         String  // Tên môn học
-  courseCode   String  // Mã học phần
-  instructor   String? // Tên giảng viên
-  color        String  @default("#3b82f6") // Màu nhận diện
-  notes        String? // Ghi chú chung
-  credits      Int?    // Số tín chỉ
+  id                 String  @id @default(cuid())
+  name               String  // Tên môn học
+  courseCode         String  // Mã học phần
+  instructor         String? // Tên giảng viên
+  color              String  @default("#3b82f6") // Màu nhận diện
+  notes              String? // Ghi chú chung
+  credits            Int?    // Số tín chỉ
+  hasMajorAssignment Boolean @default(false) // Có bài tập lớn không
+  majorAssignmentNote String? // Chi tiết bài tập lớn
+  examFormat         String? // Hình thức thi (Tự luận, Trắc nghiệm, Vấn đáp, Đồ án...)
+  examNotes          String? // Thi như nào (đề mở/đóng, thời gian, lưu ý)
+  gradingBreakdown   String? // Chia điểm ra sao (JSON array [{label, weight}])
   
   semesterId String
   semester   Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade)
@@ -250,3 +256,4 @@ model Exam {
   @@index([userId])
   @@index([date])
 }
+

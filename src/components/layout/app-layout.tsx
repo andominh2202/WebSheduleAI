@@ -19,7 +19,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       />
       <div
         className={cn(
-          'transition-all duration-300',
+          'transition-all duration-300 print:!ml-0',
           sidebarCollapsed ? 'lg:ml-[70px]' : 'lg:ml-[250px]'
         )}
       >
@@ -29,3 +29,4 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+

@@ -85,3 +85,34 @@ export const EXAM_TYPE_LABELS: Record<string, string> = {
   final: 'Cuối kỳ',
   other: 'Khác',
 };
+
+export const EXAM_FORMAT_OPTIONS = [
+  'Tự luận',
+  'Trắc nghiệm',
+  'Tự luận + Trắc nghiệm',
+  'Vấn đáp',
+  'Thực hành trên máy',
+  'Bảo vệ đồ án / Tiểu luận',
+  'Khác',
+];
+
+export interface GradingComponent {
+  label: string;
+  weight: number;
+}
+
+export function parseGradingBreakdown(raw?: string | null): GradingComponent[] {
+  if (!raw || !raw.trim()) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed
+        .filter((x) => x && typeof x.label === 'string')
+        .map((x) => ({ label: String(x.label), weight: Number(x.weight) || 0 }));
+    }
+  } catch {
+    // Fallback if plain text like "30% QT - 70% CK"
+  }
+  return [];
+}
+

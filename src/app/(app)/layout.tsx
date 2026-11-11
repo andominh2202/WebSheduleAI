@@ -15,3 +15,4 @@ export default async function AppRootLayout({
 
   return <AppLayout>{children}</AppLayout>;
 }
+

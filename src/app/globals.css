@@ -133,3 +133,25 @@
   height: 0;
   pointer-events: none;
 }
+
+.tiptap ul[data-type='taskList'] {
+  list-style: none;
+  padding: 0;
+}
+
+.tiptap ul[data-type='taskList'] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+@media print {
+  aside,
+  header {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+  }
+}
+

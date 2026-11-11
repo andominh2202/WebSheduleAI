@@ -19,6 +19,11 @@ export const courseSchema = z.object({
   notes: z.string().optional(),
   credits: z.number().int().min(0).optional(),
   semesterId: z.string().min(1, 'Chọn học kỳ'),
+  hasMajorAssignment: z.boolean().default(false),
+  majorAssignmentNote: z.string().optional(),
+  examFormat: z.string().optional(),
+  examNotes: z.string().optional(),
+  gradingBreakdown: z.string().optional(),
 });
 
 export type CourseFormData = z.infer<typeof courseSchema>;
@@ -96,3 +101,4 @@ export const resourceSchema = z.object({
   type: z.enum(['link', 'file', 'note']).default('link'),
   sessionId: z.string(),
 });
+
