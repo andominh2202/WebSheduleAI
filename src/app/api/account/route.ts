@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { hashPassword, verifyPassword } from '@/lib/password';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/api-helpers';
@@ -51,7 +52,7 @@ export async function PUT(req: NextRequest) {
     }
 
     if (parsed.newPassword) {
-      if (existing.password && parsed.currentPassword !== existing.password) {
+      if (existing.password && !(await verifyPassword(parsed.currentPassword || '', existing.password)).valid) {
         return NextResponse.json(
           { error: 'Mật khẩu hiện tại không đúng' },
           { status: 400 }
@@ -63,7 +64,7 @@ export async function PUT(req: NextRequest) {
       where: { id: userId },
       data: {
         ...(parsed.name !== undefined ? { name: parsed.name } : {}),
-        ...(parsed.newPassword ? { password: parsed.newPassword } : {}),
+        ...(parsed.newPassword ? { password: await hashPassword(parsed.newPassword) } : {}),
         ...(parsed.regenerateCalendarToken
           ? { calendarToken: crypto.randomBytes(16).toString('hex') }
           : {}),
