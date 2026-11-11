@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { hashPassword } from '@/lib/password';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { handleApiError } from '@/lib/route-error';
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
         data: {
           name: parsed.name,
           email: parsed.email,
-          password: parsed.password,
+          password: await hashPassword(parsed.password),
           calendarToken,
         },
         select: {
