@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
 import crypto from 'crypto';
+import { hashPassword, verifyPassword } from '@/lib/password';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 
@@ -26,8 +27,13 @@ const providers = [
         return null;
       }
 
-      if (user.password && user.password !== password) {
-        return null;
+      const passwordCheck = await verifyPassword(password, user.password);
+      if (!passwordCheck.valid) return null;
+      if (passwordCheck.legacy) {
+        await prisma.user.update({
+          where: { id: user.id, password: user.password },
+          data: { password: await hashPassword(password) },
+        });
       }
 
       if (!user.calendarToken) {
